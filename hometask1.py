@@ -51,12 +51,10 @@ client_secret = "__"
 
 endpoint = "https://api.foursquare.com/v3/places/search"
 
-city = input("Введите город: ")
 place = input("Введите заведение: ")
 params = {
 "client_id": client_id,
 "client_secret": client_secret,
-"near": city,
 "query": place
 }
 
@@ -70,11 +68,13 @@ response = requests.get(endpoint, params=params, headers=headers)
 if response.status_code == 200:
     print("Успешный запрос")
     data = json.loads(response.text)
-    venues = data["results"]
-    print(venues[0])   
+    venues = data["results"] 
     for venue in venues:
         print("Название:", venue["name"])
-        print("Адрес:", venue["location"]["address"])
-        print("Часовой пояс:", venue["timezone"])
+        try:
+            print("Адрес:", venue["location"]["address"])
+        except KeyError:    
+            print("Адрес: none",)
+        print("Часовой пояс:", venue["timezone"]) 
         print("Страна:", venue["location"]["country"])
         print("\n")
